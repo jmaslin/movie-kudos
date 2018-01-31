@@ -6,15 +6,16 @@
           "summary": "Thank a random person for their role on a movie.",
           "examplePhrases": [
             "Alexa open movie kudos",
-            "Alexa ask movie kudos to thank someone from Star Wars"
+            "Ask movie kudos to thank someone from Star Wars",
+            "Ask movie kudos to give kudos to Harry Potter"
           ],
           "keywords": [
             "movie",
             "kudos",
             "celebrity"
           ],
-          "name": "movie-kudos",
-          "description": ""
+          "name": "Movie Kudos",
+          "description": "Movie Kudos lets you learn about who worked on a movie, and what their role was. Everyone knows the main celebrities, but how about people in minor roles or background characters?"
         }
       },
       "isAvailableWorldwide": false,

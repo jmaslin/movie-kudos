@@ -47,7 +47,7 @@ const filterCastMembers = function filterCastMembers(data) {
 const getRandomCastMember = function getRandomCastMember(cast) {
   const randomNumber = Math.floor( Math.random() * cast.length );
 
-  return castMembers[randomNumber];
+  return cast[randomNumber];
 }
 
 // TODO: Update this logic
