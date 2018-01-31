@@ -19,7 +19,7 @@ const STOP_MESSAGE = 'Goodbye!';
 //=========================================================================================================================================
 
 exports.handler = function(event, context, callback) {
-    var alexa = Alexa.handler(event, context);
+    const alexa = Alexa.handler(event, context, callback);
     alexa.appId = APP_ID;
     alexa.registerHandlers(handlers);
     alexa.execute();
@@ -27,12 +27,21 @@ exports.handler = function(event, context, callback) {
 
 const handlers = {
     'LaunchRequest': function () {
-        this.emit('GetNewFactIntent');
-    },
-    'KudosIntent': function (input) {
-      const movieName = input ? input : this.event.request.intent.slots.Movie.value;
+      this.attributes.speechOutput = 'Welcome to Movie Kudos! ' + HELP_MESSAGE;
+      this.attributes.repromptSpeech = HELP_MESSAGE;
 
-      movie.findMovie(input).then((data) => {
+      this.response.speak(this.attributes.speechOutput).listen(this.attributes.repromptSpeech);
+      this.emit(':responseReady');
+    },
+    'KudosIntent': function () {
+      const movieSlot = this.event.request.intent.slots.Movie;
+      let movieName;
+
+      if (movieSlot && movieSlot.value) {
+        movieName = movieSlot.value;
+      }
+
+      movie.findMovie(movieName).then((data) => {
         const message = `${data.person.name} for their role as ${data.person.role} in the movie ${data.movieName}`
         const speechOutput = GET_KUDODS_MESSAGE + message;
 
@@ -41,31 +50,37 @@ const handlers = {
         this.response.cardRenderer(SKILL_NAME, message);
         this.response.speak(speechOutput);
         this.emit(':responseReady');
+      }).catch((err) => {
+        this.response.speak('Sorry, I could not find that movie.');
+        this.emit(':responseReady');
       });
     },
-    // 'GetNewFactIntent': function () {
-    //     const factArr = data;
-    //     const factIndex = Math.floor(Math.random() * factArr.length);
-    //     const randomFact = factArr[factIndex];
-    //     const speechOutput = GET_FACT_MESSAGE + randomFact;
-    //
-    //     this.response.cardRenderer(SKILL_NAME, randomFact);
-    //     this.response.speak(speechOutput);
-    //     this.emit(':responseReady');
-    // },
     'AMAZON.HelpIntent': function () {
-        const speechOutput = HELP_MESSAGE;
-        const reprompt = HELP_REPROMPT;
+      const speechOutput = HELP_MESSAGE;
+      const reprompt = HELP_REPROMPT;
 
-        this.response.speak(speechOutput).listen(reprompt);
-        this.emit(':responseReady');
+      this.response.speak(speechOutput).listen(reprompt);
+      this.emit(':responseReady');
+    },
+    'AMAZON.RepeatIntent': function () {
+      this.response.speak(this.attributes.speechOutput).listen(this.attributes.repromptSpeech);
+      this.emit(':responseReady');
     },
     'AMAZON.CancelIntent': function () {
-        this.response.speak(STOP_MESSAGE);
-        this.emit(':responseReady');
+      this.response.speak(STOP_MESSAGE);
+      this.emit(':responseReady');
     },
     'AMAZON.StopIntent': function () {
-        this.response.speak(STOP_MESSAGE);
-        this.emit(':responseReady');
+      this.response.speak(STOP_MESSAGE);
+      this.emit(':responseReady');
+    },
+    'SessionEndedRequest': function () {
+      console.log(`Session ended: ${this.event.request.reason}`);
+    },
+    'Unhandled': function () {
+      this.attributes.speechOutput = HELP_MESSAGE;
+      this.attributes.repromptSpeech = HELP_REPROMPT;
+      this.response.speak(this.attributes.speechOutput).listen(this.attributes.repromptSpeech);
+      this.emit(':responseReady');
     },
 };

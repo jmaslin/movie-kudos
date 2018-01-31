@@ -13,4 +13,4 @@ const sendTweet = function sendTweet(data) {
   return T.post('statuses/update', { status });
 };
 
-export.sendTweet = sendTweet;
+module.exports = { sendTweet };

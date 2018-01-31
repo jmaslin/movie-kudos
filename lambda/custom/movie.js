@@ -101,4 +101,4 @@ const findMovie = function findMovie(query) {
   });
 };
 
-export.findMovie = findMovie;
+module.exports = { findMovie };
