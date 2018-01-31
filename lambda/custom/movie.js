@@ -33,22 +33,32 @@ const getMovie = function getMovie(query) {
   });
 };
 
-// TODO: Update this logic
-const pickCastMember = function pickCastMember(data) {
-  const castMembers = data.cast.filter((person) => {
+const filterCastMembers = function filterCastMembers(data) {
+  return data.filter((person) => {
     // Filter out dead people
     if (person.job && person.job === 'In Memory Of') { return false; }
     if (!person.name) { return false; }
+    if (!person.character && !person.job) { return false; }
+
     return true;
   });
+};
 
-  const randomNumber = Math.floor( Math.random() * castMembers.length );
-  const castMember = castMembers[randomNumber];
+const getRandomCastMember = function getRandomCastMember(cast) {
+  const randomNumber = Math.floor( Math.random() * cast.length );
 
-  let role = castMember.character ? castMember.character : castMember.job;
-  role = role.replace(/ *\([^)]*\) */g, '');
+  return castMembers[randomNumber];
+}
 
-  return { name: castMember.name, role };
+// TODO: Update this logic
+const pickCastMember = function pickCastMember(data) {
+  const castMembers = filterCastMembers(data.cast);
+  const person = getRandomCastMember(castMembers);
+
+  person.role = person.character ? person.character : person.job;
+  person.role = person.role.replace(/ *\([^)]*\) */g, '');
+
+  return { name: person.name, role: person.role };
 };
 
 const getCastMember = function getCastMember(movieId) {
