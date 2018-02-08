@@ -2,7 +2,9 @@ const config = require('./config.json');
 const request = require('request-promise');
 
 const MOVIE_DB_ENDPOINT = 'https://api.themoviedb.org/3';
-const MOVIE_DB_API_KEY = config.movie_db.api_key;
+const MOVIE_DB_API_KEY = process.env.IS_TRAVIS ?
+  process.env.TRAVIS_MOVIE_API_KEY :
+  config.movie_db.api_key;
 
 interface Person {
   name: string;
