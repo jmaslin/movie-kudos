@@ -2,6 +2,24 @@
   "interactionModel": {
     "languageModel": {
       "invocationName": "movie kudos",
+      "types": [{
+          "name": "PEOPLE_TYPES",
+          "values": [
+            {
+              "id": null,
+              "name": {
+                "value": "crew"
+              }
+            },
+            {
+              "id": null,
+              "name": {
+                "value": "cast",
+                "synonyms": ["actor", "actress"]
+              }
+            }
+          ]
+      }],
       "intents": [
         {
           "name": "AMAZON.CancelIntent",
@@ -18,8 +36,11 @@
         {
           "name": "KudosIntent",
           "samples": [
+            "thank {Type} from {Movie}",
             "someone from {Movie}",
             "thank someone from {Movie}",
+            "thank a {Type} from {Movie}",
+            "thank the {Type} from {Movie}",
             "movie {Movie}",
             "the movie {Movie}",
             "give kudos to {Movie}"
@@ -28,6 +49,10 @@
             {
               "name": "Movie",
               "type": "AMAZON.Movie"
+            },
+            {
+              "name": "Type",
+              "type": "PEOPLE_TYPES"
             }
           ]
         }

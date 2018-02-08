@@ -14,4 +14,3 @@
 // };
 //
 // module.exports = { sendTweet };
-//# sourceMappingURL=twitter.js.map

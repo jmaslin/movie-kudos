@@ -1,114 +1,116 @@
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 const config = require('./config.json');
-
+const request = require('request-promise');
 const MOVIE_DB_ENDPOINT = 'https://api.themoviedb.org/3';
 const MOVIE_DB_API_KEY = config.movie_db.api_key;
-
-const getContent = function getContent(url) {
-  return new Promise((resolve, reject) => {
-    const lib = url.startsWith('https') ? require('https') : require('http');
-    const request = lib.get(url, (response) => {
-      if (response.statusCode < 200 || response.statusCode > 299) {
-         reject(new Error('Failed to load page, status code: ' + response.statusCode));
-       }
-      const body = [];
-      response.on('data', (chunk) => body.push(chunk));
-      response.on('end', () => resolve(JSON.parse(body.join(''))));
+const searchForMovie = function searchForMovie(query) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const url = `${MOVIE_DB_ENDPOINT}/search/movie?query=${encodeURIComponent(query)}&api_key=${MOVIE_DB_API_KEY}`;
+        const res = yield request(url);
+        const data = JSON.parse(res);
+        if (data && data.total_results > 0) {
+            return data;
+        }
     });
-    request.on('error', (err) => reject(err))
-  });
 };
-
-const getMovie = function getMovie(query) {
-  // FIXME: Better format
-  const url = `${MOVIE_DB_ENDPOINT}/search/movie?query=${encodeURIComponent(query)}&api_key=${MOVIE_DB_API_KEY}`
-
-  return new Promise((resolve, reject) => {
-    getContent(url).then((data) => {
-      if (data.total_results === 0) {
-        reject('movie not found')
-      } else {
-        resolve(data);
-      }
-    });
-  });
-};
-
 const filterCastMembers = function filterCastMembers(data) {
-  return data.filter((person) => {
-    // Filter out dead people
-    if (person.job && person.job === 'In Memory Of') { return false; }
-    if (!person.name) { return false; }
-    if (!person.character && !person.job) { return false; }
-
-    return true;
-  });
+    return data.filter((person) => {
+        // Filter out dead people
+        if (person.job && person.job === 'In Memory Of') {
+            return false;
+        }
+        if (!person.name) {
+            return false;
+        }
+        if (!person.character && !person.job) {
+            return false;
+        }
+        return true;
+    });
 };
-
-const getRandomCastMember = function getRandomCastMember(cast) {
-  const randomNumber = Math.floor( Math.random() * cast.length );
-
-  return cast[randomNumber];
-}
-
+const getRandomPerson = function getRandomPerson(groupMembers) {
+    const randomNumber = Math.floor(Math.random() * groupMembers.length);
+    return groupMembers[randomNumber];
+};
+const getRole = function getRole(person) {
+    let roleName = person.character ? person.character : person.job;
+    return roleName.replace(/ *\([^)]*\) */g, '');
+};
+const pickGroupToUse = function pickGroupToUse(personType) {
+    let groupToUse;
+    if (personType === '') {
+        groupToUse = Math.random() > 0.5 ? 'cast' : 'crew';
+    }
+    else if (personType === 'crew') {
+        groupToUse = 'crew';
+    }
+    else if (personType === 'cast' || personType.includes('act')) {
+        groupToUse = 'cast';
+    }
+    return groupToUse;
+};
 // TODO: Update this logic
-const pickCastMember = function pickCastMember(data) {
-  const castMembers = filterCastMembers(data.cast);
-  const person = getRandomCastMember(castMembers);
-
-  person.role = person.character ? person.character : person.job;
-  person.role = person.role.replace(/ *\([^)]*\) */g, '');
-
-  return { name: person.name, role: person.role };
+const getPersonOnMovie = function getPersonOnMovie(data, personType) {
+    const groupToUse = pickGroupToUse(personType);
+    const groupMembers = filterCastMembers(data[groupToUse]);
+    const person = getRandomPerson(groupMembers);
+    const name = person.name;
+    const role = getRole(person);
+    return { name, role };
 };
-
-const getCastMember = function getCastMember(movieId) {
-  // FIXME: Clean this up
-  const url = [MOVIE_DB_ENDPOINT, 'movie', movieId, `credits?api_key=${MOVIE_DB_API_KEY}`].join('/');
-
-  return new Promise((resolve, reject) => {
-    getContent(url).then((data) => {
-      if (data.cast && data.cast.length > 0) {
-        resolve(pickCastMember(data));
-      } else {
-        reject('no cast');
-      }
+const getCastMember = function getCastMember(movieId, personType) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const url = `${MOVIE_DB_ENDPOINT}/movie/${movieId}/credits?api_key=${MOVIE_DB_API_KEY}`;
+        const res = yield request(url);
+        const data = JSON.parse(res);
+        if (data.cast && data.cast.length > 0) {
+            return getPersonOnMovie(data, personType);
+        }
     });
-  });
 };
-
 const pickMovieFromResults = function pickMovieFromResults(results) {
-  if (results.length === 1) {
-    return results[0];
-  } else {
-    // only look at top 20% of results
-    const randomNumber = Math.floor( Math.random() * Math.round(results.length * 0.2) );
-    return results[randomNumber];
-  }
+    if (results.length === 1) {
+        return results[0];
+    }
+    else {
+        const randomNumber = Math.floor(Math.random() * Math.round(results.length * 0.3));
+        return results[randomNumber];
+    }
 };
-
 const findMovie = function findMovie(query) {
-  const movieInfo = {};
-
-  return new Promise((resolve, reject) => {
-    getMovie(query).then((data) => {
-      const movieResult = pickMovieFromResults(data.results);
-
-      movieInfo.id = movieResult.id;
-      movieInfo.movieName = movieResult.original_title;
-
-      getCastMember(movieInfo.id).then((castMember) => {
-        movieInfo.person = castMember;
-        resolve(movieInfo);
-      }).catch((err) => {
-        console.log('Error getting cast member:', err);
-        reject(err);
-      });
-
-    }).catch((err) => {
-      console.log('Error finding movie:', err);
-      reject(err);
+    return __awaiter(this, void 0, void 0, function* () {
+        const movieSearchData = yield searchForMovie(query);
+        if (movieSearchData) {
+            const movieResult = pickMovieFromResults(movieSearchData.results);
+            return {
+                id: movieResult.id,
+                name: movieResult.original_title
+            };
+        }
     });
-  });
 };
-
-module.exports = { findMovie };
+const getSinglePersonFromMovie = function getSinglePersonFromMovie(query, personType) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const movie = yield findMovie(query);
+        if (!movie) {
+            return { error: 'Could not find movie.' };
+        }
+        const castMember = yield getCastMember(movie.id, personType);
+        if (!castMember || !castMember.name) {
+            return { error: 'Could not find cast member.' };
+        }
+        return {
+            movieName: movie.name,
+            person: castMember
+        };
+    });
+};
+module.exports = { findMovie, getSinglePersonFromMovie };
+//# sourceMappingURL=movie.js.map

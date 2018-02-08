@@ -1,4 +1,14 @@
 .DS_Store
 node_modules
-/lambda/custom/node_modules
-/lambda/custom/config.json
+config.json
+npm-debug.log
+asktemp*.zip
+dist
+coverage
+
+# Ignore source files that are copied
+lambda/custom/config.json
+lambda/custom/package-lock.jso/
+lambda/custom/*.json
+lambda/custom/*.js
+lambda/custom/*.map
