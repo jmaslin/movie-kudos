@@ -1,4 +1,5 @@
 const IS_DEV = process.env.IS_TRAVIS ? true : false;
+const MOVIE_DB_ENDPOINT = "https://api.themoviedb.org/3";
 
 let config;
 let MOVIE_DB_API_KEY = '';
