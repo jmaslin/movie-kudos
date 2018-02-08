@@ -1,10 +1,16 @@
-const config = require('./config.json');
-const request = require('request-promise');
+const IS_DEV = process.env.IS_TRAVIS ? true : false;
 
-const MOVIE_DB_ENDPOINT = 'https://api.themoviedb.org/3';
-const MOVIE_DB_API_KEY = process.env.IS_TRAVIS ?
-  process.env.TRAVIS_MOVIE_API_KEY :
-  config.movie_db.api_key;
+let config;
+let MOVIE_DB_API_KEY = '';
+
+if (!IS_DEV) {
+  const config = require('./config.json');
+  MOVIE_DB_API_KEY = config.movie_db.api_key;
+} else {
+  MOVIE_DB_API_KEY = process.env.TRAVIS_MOVIE_API_KEY;
+}
+
+const request = require('request-promise');
 
 interface Person {
   name: string;
