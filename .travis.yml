@@ -1,0 +1,4 @@
+language: node_js
+jobs:
+  include:
+    - script: npm test
