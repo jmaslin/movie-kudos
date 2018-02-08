@@ -1,3 +1,3 @@
 # movie kudos
 
-README in progress
+[![Build Status](https://travis-ci.org/jmaslin/movie-kudos.svg?branch=master)](https://travis-ci.org/jmaslin/movie-kudos)
