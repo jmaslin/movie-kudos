@@ -5,9 +5,9 @@
         "en-US": {
           "summary": "Thank a random person for their role on a movie.",
           "examplePhrases": [
-            "Alexa ask movie kudos to thank the (cast|crew) from Star Wars",
-            "Alexa ask movie kudos who the producer was in Star Wars",
-            "Alexa ask movie kudos who played Princess Leia in Star Wars"
+            "Alexa, ask movie kudos to thank the (cast|crew) from Star Wars",
+            "Alexa, ask movie kudos who the producer was in Star Wars",
+            "Alexa, ask movie kudos who played Princess Leia in Star Wars"
           ],
           "keywords": [
             "movie",
@@ -16,11 +16,13 @@
             "trivia"
           ],
           "name": "Movie Kudos",
-          "description": "Movie Kudos lets you learn about who worked on a movie, and what their role was."
+          "description": "Movie Kudos lets you learn about who worked on a movie, and what their role was.",
+          "smallIconUri": "https://s3.amazonaws.com/maslindevpublic/movie_kudos/moviesmall.png",
+          "largeIconUri": "https://s3.amazonaws.com/maslindevpublic/movie_kudos/moviebig.png"
         }
       },
-      "isAvailableWorldwide": false,
-      "testingInstructions": "Sample Testing Instructions.",
+      "isAvailableWorldwide": true,
+      "testingInstructions": "Say 'Alexa, thank the crew from Star Wars' or one of the example phrases. Please try movies and roles that do not exist as well.",
       "category": "EDUCATION_AND_REFERENCE",
       "distributionCountries": []
     },
@@ -31,6 +33,13 @@
         }
       }
     },
-    "manifestVersion": "1.0"
+    "manifestVersion": "1.0",
+    "privacyAndCompliance": {
+      "allowsPurchases": false,
+      "isExportCompliant": true,
+      "isChildDirected": false,
+      "usesPersonalInfo": false,
+      "containsAds": false
+    }
   }
 }
