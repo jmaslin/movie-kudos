@@ -59,7 +59,10 @@
             "who was a {Role} in {Movie}",
             "who was a {Character} in {Movie}",
             "who was an {Role} in {Movie}",
+            "who was {Role} in {Movie}",
+            "who was {Role} in the {Movie}",
             "who was the {Role} in {Movie}",
+            "who was the {Role} in the {Movie}",
             "who was the {Role} for {Movie}",
             "{Role} in {Movie}"
           ],
