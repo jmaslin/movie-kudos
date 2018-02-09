@@ -139,7 +139,7 @@ const getRoleFromMovie = function getRoleFromMovie(movieName, roleName) {
             return { movie, person: results[0] };
         }
         else {
-            return { error: 'Role not found.' };
+            return { movie, error: 'Role not found.' };
         }
     });
 };

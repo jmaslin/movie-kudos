@@ -5,9 +5,9 @@
         "en-US": {
           "summary": "Thank a random person for their role on a movie.",
           "examplePhrases": [
-            "Ask movie kudos to thank the (cast|crew) from Star Wars",
-            "Ask movie kudos who the producer was in Star Wars",
-            "ASk movie kudos who played Princess Leia in Star Wars"
+            "Alexa ask movie kudos to thank the (cast|crew) from Star Wars",
+            "Alexa ask movie kudos who the producer was in Star Wars",
+            "Alexa ask movie kudos who played Princess Leia in Star Wars"
           ],
           "keywords": [
             "movie",

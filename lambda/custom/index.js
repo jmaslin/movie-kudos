@@ -39,7 +39,10 @@ const handlers = {
                 role = characterSlot.value;
             }
             const data = yield movie.getRoleFromMovie(movieName, role);
-            if (!data.person.name) {
+            if (!data.movie) {
+                this.response.speak('Sorry, I could not find that movie.');
+            }
+            else if (!data.person) {
                 this.response.speak('Sorry, I could not find out who played that role.');
             }
             else if (data.person.character) {

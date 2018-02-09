@@ -185,7 +185,7 @@ const getRoleFromMovie = async function getRoleFromMovie(movieName: string, role
   if (results.length > 0) {
     return { movie, person: results[0] };
   } else {
-    return { error: 'Role not found.' };
+    return { movie, error: 'Role not found.' };
   }
 };
 
