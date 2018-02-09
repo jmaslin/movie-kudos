@@ -5,17 +5,18 @@
         "en-US": {
           "summary": "Thank a random person for their role on a movie.",
           "examplePhrases": [
-            "Alexa open movie kudos",
-            "Ask movie kudos to thank someone from Star Wars",
-            "Ask movie kudos to give kudos to Harry Potter"
+            "Ask movie kudos to thank the (cast|crew) from Star Wars",
+            "Ask movie kudos who the producer was in Star Wars",
+            "ASk movie kudos who played Princess Leia in Star Wars"
           ],
           "keywords": [
             "movie",
             "kudos",
-            "celebrity"
+            "celebrity",
+            "trivia"
           ],
           "name": "Movie Kudos",
-          "description": "Movie Kudos lets you learn about who worked on a movie, and what their role was. Everyone knows the main celebrities, but how about people in minor roles or background characters?"
+          "description": "Movie Kudos lets you learn about who worked on a movie, and what their role was."
         }
       },
       "isAvailableWorldwide": false,

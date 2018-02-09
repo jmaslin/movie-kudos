@@ -112,14 +112,14 @@ const getPersonOnMovie = function getPersonOnMovie(data: any, personType: string
   return { name, role };
 };
 
-const getCastMember = async function getCastMember(movieId: number, personType: string) {
+const getMovieCredits = async function getMovieCredits(movieId: number) {
   const url = `${MOVIE_DB_ENDPOINT}/movie/${movieId}/credits?api_key=${MOVIE_DB_API_KEY}`;
 
   const res = await request(url);
   const data = JSON.parse(res);
 
   if (data.cast && data.cast.length > 0) {
-    return getPersonOnMovie(data, personType);
+    return data;
   }
 };
 
@@ -152,7 +152,8 @@ const getSinglePersonFromMovie = async function getSinglePersonFromMovie(query: 
     return { error: 'Could not find movie.' };
   }
 
-  const castMember: Person = await getCastMember(movie.id, personType);
+  const movieCredits = await getMovieCredits(movie.id);
+  const castMember = getPersonOnMovie(movieCredits, personType);
 
   if (!castMember || !castMember.name) {
     return { error: 'Could not find cast member.' };
@@ -164,4 +165,28 @@ const getSinglePersonFromMovie = async function getSinglePersonFromMovie(query: 
   };
 };
 
-module.exports = { findMovie, getSinglePersonFromMovie };
+const getRoleFromMovie = async function getRoleFromMovie(movieName: string, roleName: string) {
+  const movie: MovieResult = await findMovie(movieName);
+
+  if (!movie) {
+    return { error: 'Could not find movie.' };
+  }
+
+  const movieCredits = await getMovieCredits(movie.id);
+  const creditList = movieCredits.cast.concat(movieCredits.crew);
+  const results = creditList.filter((person: MovieDB_Person) => {
+    const role = person.job ? person.job : person.character;
+
+    if (role.toLowerCase().includes(roleName.toLowerCase())) {
+      return true;
+    }
+  });
+
+  if (results.length > 0) {
+    return { movie, person: results[0] };
+  } else {
+    return { error: 'Role not found.' };
+  }
+};
+
+module.exports = { findMovie, getRoleFromMovie, getSinglePersonFromMovie };

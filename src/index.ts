@@ -6,7 +6,7 @@ const APP_ID = "amzn1.ask.skill.2d379926-4e22-4182-9b56-b71edb172d03";
 
 const SKILL_NAME = 'Movie Kudos';
 const GET_KUDODS_MESSAGE = "You should thank: ";
-const HELP_MESSAGE = 'You can say thank someone from Star Wars, or any movie, or you can say exit... What can I help you with?';
+const HELP_MESSAGE = 'You can say thank someone from Star Wars, or you can ask who played a role. What can I help you with?';
 const HELP_REPROMPT = 'What can I help you with?';
 const STOP_MESSAGE = 'Goodbye!';
 
@@ -18,6 +18,38 @@ const handlers = {
       this.response.speak(this.attributes.speechOutput).listen(this.attributes.repromptSpeech);
       this.emit(':responseReady');
     },
+    'LookupPersonIntent': async function() {
+      const movieSlot = this.event.request.intent.slots.Movie;
+      const roleSlot = this.event.request.intent.slots.Role;
+      const characterSlot = this.event.request.intent.slots.Character;
+
+      let movieName;
+      let role;
+
+      if (movieSlot && movieSlot.value) { movieName = movieSlot.value; }
+      if (roleSlot && roleSlot.value) { role = roleSlot.value; }
+      else if (characterSlot && characterSlot.value) { role = characterSlot.value; }
+
+      const data = await movie.getRoleFromMovie(movieName, role);
+
+      if (!data.person.name) {
+        this.response.speak('Sorry, I could not find out who played that role.');
+      } else if (data.person.character) {
+        const message = `The character ${data.person.character} in ${data.movie.name} was played by ${data.person.name}.`;
+
+        this.response.cardRenderer(SKILL_NAME, message);
+        this.response.speak(message);
+      } else if (data.person.job) {
+        const message = `The ${data.person.job} in ${data.movie.name} was ${data.person.name}.`;
+
+        this.response.cardRenderer(SKILL_NAME, message);
+        this.response.speak(message);
+      } else {
+        this.response.speak('Sorry, there was an error looking up that role.');
+      }
+
+      this.emit(':responseReady');
+    },
     'KudosIntent': async function () {
       const movieSlot = this.event.request.intent.slots.Movie;
       const personTypeSlot = this.event.request.intent.slots.Type;
@@ -25,13 +57,8 @@ const handlers = {
       let movieName;
       let personType = '';
 
-      if (movieSlot && movieSlot.value) {
-        movieName = movieSlot.value;
-      }
-
-      if (personTypeSlot && personTypeSlot.value) {
-        personType = personTypeSlot.value;
-      }
+      if (movieSlot && movieSlot.value) { movieName = movieSlot.value; }
+      if (personTypeSlot && personTypeSlot.value) { personType = personTypeSlot.value; }
 
       const data = await movie.getSinglePersonFromMovie(movieName, personType);
 

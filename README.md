@@ -9,6 +9,6 @@ TO DO (CODE):
 - [ ] Modularize code more
 
 TO DO (FEATURES):
-- [ ] Ability to thank cast/crew by role played (director, Darth Vader, camera operator)
+- [x] Ability to thank cast/crew by role played (director, Darth Vader, camera operator)
 - [ ] Fix twitter integration
 - [ ] Lookup if person has twitter account and @ them

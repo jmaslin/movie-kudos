@@ -2,7 +2,8 @@
   "interactionModel": {
     "languageModel": {
       "invocationName": "movie kudos",
-      "types": [{
+      "types": [
+        {
           "name": "PEOPLE_TYPES",
           "values": [
             {
@@ -19,7 +20,20 @@
               }
             }
           ]
-      }],
+        },
+        {
+          "name": "ROLE_TYPES",
+          "values": [
+            {
+              "id": null,
+              "name": {
+                "value": "producer",
+                "synonyms": ["executive", "producer", "luke skywalker", "camera man"]
+              }
+            }
+          ]
+        }
+      ],
       "intents": [
         {
           "name": "AMAZON.CancelIntent",
@@ -34,6 +48,37 @@
           "samples": []
         },
         {
+          "name": "LookupPersonIntent",
+          "samples": [
+            "who played {Character} in {Movie}",
+            "who was {Character} in {Movie}",
+            "who {Character} in {Movie}",
+            "who the {Role} for {Movie}",
+            "who the {Role} for {Movie} is",
+            "who the {Role} for {Movie} was",
+            "who was a {Role} in {Movie}",
+            "who was a {Character} in {Movie}",
+            "who was an {Role} in {Movie}",
+            "who was the {Role} in {Movie}",
+            "who was the {Role} for {Movie}",
+            "{Role} in {Movie}"
+          ],
+          "slots": [
+            {
+              "name": "Movie",
+              "type": "AMAZON.Movie"
+            },
+            {
+              "name": "Role",
+              "type": "ROLE_TYPES"
+            },
+            {
+              "name": "Character",
+              "type": "AMAZON.FictionalCharacter"
+            }
+          ]
+        },
+        {
           "name": "KudosIntent",
           "samples": [
             "thank {Type} from {Movie}",
@@ -41,6 +86,7 @@
             "thank someone from {Movie}",
             "thank a {Type} from {Movie}",
             "thank the {Type} from {Movie}",
+            "thank the {Type} of {Movie}",
             "movie {Movie}",
             "the movie {Movie}",
             "give kudos to {Movie}"
