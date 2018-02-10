@@ -8,11 +8,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 const IS_DEV = process.env.IS_TRAVIS ? true : false;
 const MOVIE_DB_ENDPOINT = "https://api.themoviedb.org/3";
-let config;
 let MOVIE_DB_API_KEY = '';
 if (!IS_DEV) {
-    const config = require('./config.json');
-    MOVIE_DB_API_KEY = config.movie_db.api_key;
+    const movieConfig = require('./config.json').movie_db;
+    MOVIE_DB_API_KEY = movieConfig.api_key;
 }
 else {
     MOVIE_DB_API_KEY = process.env.TRAVIS_MOVIE_API_KEY;

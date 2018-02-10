@@ -27,6 +27,9 @@ test('getRoleFromMovie gives the person who plays role', async function() {
 
   result = await Movie.getRoleFromMovie('star wars episode 4', 'luke skywalker');
   expect(result.person.name).toBe('Mark Hamill');
+
+  result = await Movie.getRoleFromMovie('saving private ryan', 'key grip');
+  expect(result.person.name).toBe('John Flemming');
 });
 
 test('getRoleFromMovie returns an error', async function() {

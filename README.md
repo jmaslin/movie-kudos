@@ -10,5 +10,5 @@ TO DO (CODE):
 
 TO DO (FEATURES):
 - [x] Ability to thank cast/crew by role played (director, Darth Vader, camera operator)
-- [ ] Fix twitter integration
+- [x]] Fix twitter integration
 - [ ] Lookup if person has twitter account and @ them
