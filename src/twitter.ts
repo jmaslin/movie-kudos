@@ -5,7 +5,7 @@ const TWITTER_ENDPOINT = 'https://api.twitter.com/1.1/statuses/update.json';
 
 const T = new Twit(twitterConfig);
 
-const findPerson = async function findPerson(query) {
+const findPerson = async function findPerson(query: string) {
   const { err, data, res } = await T.get('users/search', { q: query});
 
   if (err) {
