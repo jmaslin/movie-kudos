@@ -1,7 +1,20 @@
 const Twit = require('twit');
-var twitterConfig = require('./config.json').twitter;
 
+const IS_DEV = process.env.IS_TRAVIS ? true : false;
 const TWITTER_ENDPOINT = 'https://api.twitter.com/1.1/statuses/update.json';
+
+let twitterConfig;
+
+if (!IS_DEV) {
+  twitterConfig = require('./config.json').twitter;
+} else {
+  twitterConfig = {
+    "consumer_key": process.env.TRAVIS_TWITTER_CONSUMER_KEY,
+    "consumer_secret": process.env.TRAVIS_TWITTER_CONSUMER_SECRET,
+    "access_token": process.env.TRAVIS_TWITTER_TOKEN,
+    "access_token_secret": process.env.TRAVIS_TWITTER_TOKEN_SECRET
+  };
+}
 
 const T = new Twit(twitterConfig);
 
